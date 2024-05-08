@@ -30,7 +30,7 @@ except:
     model=MainModel().to(device)
     print("新建模型")
 loss_func=torch.nn.CrossEntropyLoss().to(device)
-optimizer=torch.optim.SGD(model.parameters(),lr=1e-4)
+optimizer=torch.optim.SGD(model.parameters(),lr=3e-5)
 
 def train(ask,answer):
     input=encode(ask).to(device)

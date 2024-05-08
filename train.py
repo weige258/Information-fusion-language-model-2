@@ -1,13 +1,26 @@
-from main import train,generation,model
+import re
+import random
+from main import *
 import torch
-
-for e in range(5):
-    for line in open("样例_内科5000-6000.csv"):
-        try:
-            a,b,c,d=line.split(",")
-            train(c,d)
-            generation(c)
-        except:
+f=open("train_sft.csv","r")
+text=f.read()
+pattern = r'<s>Human:(.*?)</s>'
+a=re.findall(pattern,text,re.DOTALL)
+pattern = r'<s>Assistant:(.*?)</s>'
+b=re.findall(pattern,text,re.DOTALL)
+num=0
+while True:
+    try:
+        i=random.randint(0,len(a))
+        ask=a[i]
+        answer=b[i]
+        train(ask,answer)
+        generation(ask)
+        num+=1
+        if num%200==0:
+            torch.save(obj=model,f="model.pth")
+        else:
             continue
-    torch.save(obj=model,f="model.pth")
+    except:
+        continue
 

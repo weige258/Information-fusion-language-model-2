@@ -4,6 +4,7 @@ from main import *
 import torch
 f=open("train_sft.csv","r")
 text=f.read()
+text=re.sub(pattern=r"\n",repl="",string=text)
 pattern = r'<s>Human:(.*?)</s>'
 a=re.findall(pattern,text,re.DOTALL)
 pattern = r'<s>Assistant:(.*?)</s>'

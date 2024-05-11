@@ -1,5 +1,10 @@
 import torch
 
+def layer_norm(tensor):
+    device=tensor.device
+    tensor=torch.nn.LayerNorm([tensor.size()[0],tensor.size()[1]],device=device)(tensor)
+    return tensor
+
 class RMSNorm(torch.nn.Module):
     def __init__(self, dim: int, eps: float = 1e-6):
         super().__init__()
@@ -35,6 +40,7 @@ class TransformerBlock(torch.nn.Module):
         tensor2=self.drop_out(tensor2)
         tensor=tensor1*tensor2
         tensor=self.linear3(tensor)
+        tensor=self.drop_out(tensor)
         tensor+=copy_tensor
         return tensor
 
@@ -42,6 +48,7 @@ emb_size=256
 heads=32
 dict_size=60000
 max_length=100
+temperature=0.3
 
 class MainModel(torch.nn.Module):
     def __init__(self):
@@ -62,6 +69,7 @@ class MainModel(torch.nn.Module):
         self.output_layer=torch.nn.Linear(emb_size,dict_size)
     def forward(self,prompt,autoregressive):
         prompt=self.emb(prompt)
+        prompt=layer_norm(prompt)
         autoregressive=self.emb(autoregressive)
         autoregressive=self.font_block1(autoregressive)
         autoregressive = self.font_block2(autoregressive)

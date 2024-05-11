@@ -18,7 +18,7 @@ while True:
         train(ask,answer)
         generation(ask)
         num+=1
-        if num%200==0:
+        if num%100==0:
             torch.save(obj=model,f="model.pth")
         else:
             continue

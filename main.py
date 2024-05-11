@@ -51,7 +51,7 @@ def generation(text):
     for i in range(max_length):
         try:
             output=model(prompt,target.unsqueeze(0))
-            index=int(torch.argmax(output))
+            index=int(torch.multinomial(torch.softmax(output/temperature,dim=-1),1))
             letter=chr(index).encode("utf-8").decode("utf-8")
             output_text+=letter
             target=torch.tensor(index).to(device)
